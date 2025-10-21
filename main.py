@@ -1,6 +1,5 @@
 from enum import Enum # Для использования Enum
-from typing import List # Для указания переменной как список элементов определенного типа.
-
+from typing import List, Optional # Для подсказок типов (списки и необязательные значения)
 
 class Gender(Enum):
     """Пол питомца или владельца"""
@@ -60,6 +59,7 @@ class PetDocument:
         self.issue_date = issue_date
         self.pet_name = pet_name
         self.owner = owner
+        self.gender = gender
 
 
 class Passport(PetDocument):
@@ -80,35 +80,46 @@ class MedicalCard(PetDocument):
 
 
 class Pet:
-    def __init__(self, name: str, age: int, gender: Gender):
+    def __init__(self, name: str, age: int, gender: Gender, color: Color):
+        """Родительский класс для питомца"""
         self.name = name
         self.age = age
         self.gender = gender
+        self.color = color
+        self.passport: Optional[Passport] = None # Паспорт питомца
+        self.medical_card: Optional[MedicalCard] = None # Медкарта питомца
+
+
+class Dog(Pet):
+    """Класс собаки"""
+    def __init__(self, name: str, age: int, gender: Gender, color: Color, breed: DogBreed):
+        super().__init__(name, age, gender, color)
+        self.breed = breed
+
+
+class Cat(Pet):
+    """Класс кошки"""
+    def __init__(self, name: str, age: int, gender: Gender, color: Color, breed: CatBreed):
+        super().__init__(name, age, gender, color)
+        self.breed = breed
 
 
 class Organization:
+    """Родительский класс для организаций"""
     def __init__(self, name: str, address: str):
         self.name = name
         self.address = address
 
 
-class Dog(Pet):
-    def __init__(self, breed: DogBreed):
-        super().__init__()
-        self.breed = breed
-
-
-class Cat(Pet):
-    def __init__(self, breed: CatBreed):
-        super().__init__()
-        self.breed = breed
-
-
 class PetShop(Organization):
-    def __init__(self):
-        super().__init__()
+    """"Зоомагазин"""
+    def __init__(self, name: str, address: str):
+        super().__init__(name, address)
+        self.sales: List[dict] = [] # Записи о продажах
 
 
 class VetClinic(Organization):
-    def __init__(self):
-        super().__init__()
+    """Ветеринарная клиника"""
+    def __init__(self, name: str, address: str):
+        super().__init__(name, address)
+        self.records: List[dict] = [] # Записи о посещениях

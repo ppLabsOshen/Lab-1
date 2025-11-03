@@ -52,6 +52,41 @@ class Owner:
         self.gender = gender
         self.pets: List['Pet'] = []
 
+    def show_pets(self):
+        if not self.pets:
+            print("У вас пока нет питомцев\n")
+            return
+        print("Ваши питомцы:\n")
+        for i, pet in enumerate(self.pets, 1):
+            print(f"{i}. {pet}")
+
+    def  add_pet(self, pet: 'Pet'):
+        self.pets.append(pet)
+        print(f"Питомец {pet.name} успешно добавлен\n")
+
+    def remove_pet(self):
+        if not self.pets:
+            print("У вас нет питомцев для удаления.\n")
+            return
+
+        while True:
+            self.show_pets()
+            user_input = input("Выберите питомца для удаления или 0 для выхода.\n")
+
+            if user_input == "0":
+                break
+
+            try:
+                choice = int(user_input)
+                if 1 <= choice <= len(self.pets):
+                    removed_pet = self.pets.pop(choice - 1)
+                    print(f"Питомец {removed_pet.name} успешно удалён!\n")
+                    break
+                else:
+                    print("Неверный номер! Попробуйте снова.")
+            except ValueError:
+                print("Введите число!")
+
 
 class PetDocument:
     """Родительский класс для документов питомца"""
@@ -116,6 +151,29 @@ class PetShop(Organization):
     def __init__(self, name: str, address: str):
         super().__init__(name, address)
         self.sales: List[dict] = [] # Записи о продажах
+
+    def add_sale(self, owner: Owner, pet: Pet):
+        """Добавить питомца владельцу"""
+        owner.pets.append(pet)
+
+        sale_record = {
+            "owner": owner,
+            "pet": pet,
+            }
+
+        print(f"Питомец {pet.name} ({pet.__class__.__name__}) продан владельцу {owner.name}.")
+
+    def show_sales(self):
+        """Показать список всех продаж"""
+        if not self.sales:
+            print("Пока нет продаж.")
+            return
+
+        print(f"\nПродажи магазина {self.name}:")
+        for i, sale in enumerate(self.sales, 1):
+            pet = sale["pet"]
+            owner = sale["owner"]
+            print(f"{i}. {owner.name} купил(а) {pet.name} ({pet.__class__.__name__}).")
 
 
 class VetClinic(Organization):

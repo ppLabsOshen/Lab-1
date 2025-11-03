@@ -4,3 +4,5 @@ git remote add origin <ссылка на репозиторий> - связка 
 git add . - добавление всех измененных файлов в stage-зону
 git commit -m ‘<сообщение>’
 git push origin master
+
+Пук пук среньк 
